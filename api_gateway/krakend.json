@@ -1,0 +1,174 @@
+{
+  "version": "2",
+  "name": "Social Media Gateway",
+  "port": 8000,
+  "cache_ttl": "3600s",
+  "timeout": "3s",
+  "extra_config": {
+    "github_com/devopsfaith/krakend-gologging": {
+      "level": "DEBUG",
+      "prefix": "[KRAKEND]",
+      "syslog": false,
+      "stdout": true
+    },
+    "github_com/devopsfaith/krakend-metrics": {
+      "collection_time": "60s",
+      "proxy_disabled": false,
+      "router_disabled": false,
+      "backend_disabled": false,
+      "endpoint_disabled": false,
+      "listen_address": ":8090"
+    },
+    "github_com/devopsfaith/krakend-cors": {
+      "allow_origins": [],
+      "allow_methods": [
+        "POST",
+        "GET",
+        "PUT",
+        "DELETE"
+      ],
+      "allow_headers": [
+        "Origin",
+        "Authorization",
+        "Content-Type"
+      ],
+      "expose_headers": [
+        "Content-Length"
+      ],
+      "max_age": "12h"
+    }
+  },
+  "endpoints": [
+    {
+      "endpoint": "/auth/login",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "host": [
+            "http://127.0.0.1:8001"
+          ],
+          "url_pattern": "/login",
+          "encoding": "no-op"
+        }
+      ],
+      "extra_config": {
+        "github.com/devopsfaith/krakend-ratelimit/juju/proxy": {
+          "maxRate": 2,
+          "capacity": 2
+        },
+        "github.com/devopsfaith/krakend-circuitbreaker/gobreaker": {
+          "interval": 60,
+          "timeout": 10,
+          "maxErrors": 1
+        }
+      }
+    },
+    {
+      "endpoint": "/auth/register",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "host": [
+            "http://127.0.0.1:8001"
+          ],
+          "url_pattern": "/register",
+          "encoding": "no-op"
+        }
+      ],
+      "extra_config": {
+        "github.com/devopsfaith/krakend-ratelimit/juju/proxy": {
+          "maxRate": 2,
+          "capacity": 2
+        },
+        "github.com/devopsfaith/krakend-circuitbreaker/gobreaker": {
+          "interval": 60,
+          "timeout": 10,
+          "maxErrors": 1
+        }
+      }
+    },
+    {
+      "endpoint": "/auth/logout",
+      "method": "POST",
+      "headers_to_pass": [
+        "Authorization"
+      ],
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "host": [
+            "http://127.0.0.1:8001"
+          ],
+          "url_pattern": "/logout",
+          "encoding": "no-op"
+        }
+      ],
+      "extra_config": {
+        "github.com/devopsfaith/krakend-ratelimit/juju/proxy": {
+          "maxRate": 2,
+          "capacity": 2
+        },
+        "github.com/devopsfaith/krakend-circuitbreaker/gobreaker": {
+          "interval": 60,
+          "timeout": 10,
+          "maxErrors": 1
+        }
+      }
+    },
+    {
+      "endpoint": "/tweet/add",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "headers_to_pass": [
+        "Authorization"
+      ],
+      "backend": [
+        {
+          "host": [
+            "http://127.0.0.1:8002"
+          ],
+          "url_pattern": "/tweet/add",
+          "encoding": "no-op"
+        }
+      ],
+      "extra_config": {
+        "github.com/devopsfaith/krakend-ratelimit/juju/proxy": {
+          "maxRate": 2,
+          "capacity": 2
+        },
+        "github.com/devopsfaith/krakend-circuitbreaker/gobreaker": {
+          "interval": 60,
+          "timeout": 10,
+          "maxErrors": 1
+        }
+      }
+    },
+    {
+      "endpoint": "/statistic",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "host": [
+            "http://127.0.0.1:8003"
+          ],
+          "url_pattern": "/statistic",
+          "encoding": "no-op"
+        }
+      ],
+      "extra_config": {
+        "github.com/devopsfaith/krakend-ratelimit/juju/proxy": {
+          "maxRate": 2,
+          "capacity": 2
+        },
+        "github.com/devopsfaith/krakend-circuitbreaker/gobreaker": {
+          "interval": 60,
+          "timeout": 10,
+          "maxErrors": 1
+        }
+      }
+    }
+  ]
+}
