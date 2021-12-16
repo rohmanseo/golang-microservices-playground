@@ -10,6 +10,18 @@ type permanentDbImpl struct {
 	pgConnection *sql.DB
 }
 
+func (p permanentDbImpl) GetTotalTweet() int {
+	query := fmt.Sprintf("SELECT count(id) FROM public.tweet;")
+	res := 0
+	err := p.pgConnection.QueryRow(query).Scan(&res)
+	if err != nil {
+		return 0
+	}
+
+	return res
+
+}
+
 func (p permanentDbImpl) AddTweet(userId int64, tweetContent string) (entity.Tweet, error) {
 	insertQuery := fmt.Sprintf("INSERT INTO \"tweet\"(user_id, tweet_content) VALUES ('%d', '%s') RETURNING id,user_id, tweet_content;", userId, tweetContent)
 	tweet := entity.Tweet{

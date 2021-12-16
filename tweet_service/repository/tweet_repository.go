@@ -6,4 +6,5 @@ import (
 
 type ITweetRepository interface {
 	AddTweet(userId int64, tweetContent string) (entity.Tweet, error)
+	GetTotalTweet() int
 }
