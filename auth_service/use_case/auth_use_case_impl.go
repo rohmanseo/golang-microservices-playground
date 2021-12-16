@@ -3,7 +3,6 @@ package use_case
 import (
 	"errors"
 	"fmt"
-	"github.com/nats-io/nats.go"
 	"github.com/rohmanseo/golang-clean-arch/entity"
 	"github.com/rohmanseo/golang-clean-arch/model"
 	"github.com/rohmanseo/golang-clean-arch/repository"
@@ -37,6 +36,7 @@ func (a *authUseCaseImpl) Register(request model.RegisterRequest) (model.Registe
 		return model.RegisterResponse{}, err
 	}
 	return model.RegisterResponse{
+		Id:    res.Id,
 		Name:  res.Name,
 		Email: res.Email,
 	}, nil
